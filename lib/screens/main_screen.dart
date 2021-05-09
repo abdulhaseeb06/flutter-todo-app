@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/models/todo.dart';
+import 'package:flutter_todo_app/screens/add_todo_screen.dart';
 import 'package:flutter_todo_app/widgets/todo_list.dart';
 
 class MainScreen extends StatelessWidget {
@@ -46,7 +47,9 @@ class MainScreen extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, AddTodoScreen.routeName);
+          },
         ),
       ),
     );

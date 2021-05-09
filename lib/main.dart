@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/providers/todo_list.dart';
+import 'package:flutter_todo_app/screens/add_todo_screen.dart';
 import 'package:flutter_todo_app/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,9 @@ void main() {
             ),
           ),
         ),
+        routes: {
+          AddTodoScreen.routeName: (ctx) => AddTodoScreen(),
+        },
       ),
     ),
   );
