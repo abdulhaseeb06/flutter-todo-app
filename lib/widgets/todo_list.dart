@@ -9,9 +9,11 @@ class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoListProvider>(context);
+
     final _todoList = this.status == TodoStatus.Completed
         ? todoProvider.getCompletedTodoList
         : todoProvider.getPendingTodoList;
+
     final totlaItems = _todoList.length;
     return _todoList.length <= 0
         ? Container(
@@ -24,31 +26,79 @@ class TodoList extends StatelessWidget {
           )
         : ListView.builder(
             itemBuilder: (ctx, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
+              return Dismissible(
+                key: ValueKey(_todoList[index].id),
+                onDismissed: (direction) {
+                  status == TodoStatus.Pending
+                      ? todoProvider.updateTodoStatus(
+                          _todoList[index].id, TodoStatus.Completed)
+                      : todoProvider.deleteTodo(_todoList[index].id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Container(
+                        margin:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: status == TodoStatus.Pending
+                            ? Text('Todo Status Updated')
+                            : Text('Todo Deleted From List'),
+                      ),
+                    ),
+                  );
+                },
+                background: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  margin: EdgeInsets.all(5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: status == TodoStatus.Pending
+                            ? Text(
+                                'Mark Todo as Completed',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400),
+                              )
+                            : Text(
+                                'Delete Todo',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                      )
+                    ],
+                  ),
                 ),
-                margin: EdgeInsets.all(5),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.pending_actions,
-                    color: Colors.white,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  title: Text(
-                    _todoList[index].text,
-                    style: TextStyle(color: Colors.white),
+                  margin: EdgeInsets.all(5),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.pending_actions,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      _todoList[index].text,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    subtitle: _todoList[index].status == TodoStatus.Pending
+                        ? Text(
+                            'Pending',
+                            style: TextStyle(color: Colors.white),
+                          )
+                        : Text(
+                            'Completed',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                    key: ValueKey(_todoList[index].id),
                   ),
-                  subtitle: _todoList[index].status == TodoStatus.Pending
-                      ? Text(
-                          'Pending',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      : Text(
-                          'Completed',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                  key: ValueKey(_todoList[index].id),
                 ),
               );
             },

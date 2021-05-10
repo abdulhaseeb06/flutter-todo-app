@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/models/todo.dart';
+import 'package:flutter_todo_app/providers/todo_list.dart';
+import 'package:provider/provider.dart';
 
 class AddTodoScreen extends StatefulWidget {
   static const routeName = '/add-todo';
@@ -11,6 +14,12 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
   bool _valid = true;
   void addTodo() {
     if (_textController.text.isNotEmpty) {
+      final todoProvider =
+          Provider.of<TodoListProvider>(context, listen: false);
+      todoProvider.addTodo(Todo(
+          id: DateTime.now().toString(),
+          text: _textController.text,
+          status: TodoStatus.Pending));
       Navigator.of(context).pop();
     } else {
       setState(() {
@@ -41,6 +50,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                   borderSide: new BorderSide(color: Colors.red[400]),
                 ),
               ),
+              textCapitalization: TextCapitalization.sentences,
             ),
             SizedBox(
               height: 10,

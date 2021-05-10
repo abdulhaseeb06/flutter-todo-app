@@ -53,4 +53,15 @@ class TodoListProvider with ChangeNotifier {
     _todos.add(todo);
     notifyListeners();
   }
+
+  void updateTodoStatus(String id, TodoStatus status) {
+    final index = _todos.indexWhere((element) => element.id == id);
+    _todos[index].status = status;
+    notifyListeners();
+  }
+
+  void deleteTodo(String id) {
+    _todos.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
 }
